@@ -56,7 +56,7 @@ void main() async {
 Using `executeThenMap` to process results after all futures have completed:
 
 ```dart
-import 'package:zip_future/zip_next.dart';
+import 'package:zip_future/zip_future.dart';
 
 void main() async {
   var futures = [
