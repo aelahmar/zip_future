@@ -45,7 +45,7 @@ void main() {
 
     final errors = <dynamic>[];
 
-    final results = await zipFuture.execute(onError: (index, error) {
+    final results = await zipFuture.execute(onError: (index, error, trace) {
       errors.add({'index': index, 'error': error});
     });
 
@@ -69,7 +69,7 @@ void main() {
         return results.fold(
             0, (previousValue, element) => previousValue + element);
       },
-      onError: (index, error) {
+      onError: (index, error, trace) {
         errors.add({'index': index, 'error': error});
       },
     );

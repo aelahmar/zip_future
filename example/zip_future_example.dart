@@ -29,7 +29,7 @@ void main() {
 
   final zipFutureWithError = ZipFuture.zip([future4, future5, future6]);
 
-  zipFutureWithError.execute(onError: (index, error) {
+  zipFutureWithError.execute(onError: (index, error, trace) {
     print('Error at index $index: $error');
   }).then((results) {
     print(results); // [1, 3]
@@ -43,7 +43,7 @@ void main() {
       return results.fold(
           0, (previousValue, element) => previousValue + element);
     },
-    onError: (index, error) {
+    onError: (index, error, trace) {
       print('Error at index $index: $error');
     },
   ).then((result) {

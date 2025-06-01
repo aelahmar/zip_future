@@ -24,16 +24,16 @@ class ZipFuture {
   ///
   /// Returns a [Future] that completes with a list of the results of the futures.
   Future<List<dynamic>> execute({
-    void Function(int index, dynamic error)? onError,
+    void Function(int index, dynamic error, dynamic trace)? onError,
   }) async {
     final results = [];
 
     for (int i = 0; i < futures.length; i++) {
       try {
         results.add(await futures[i]);
-      } catch (error) {
+      } catch (error, trace) {
         if (onError != null) {
-          onError(i, error);
+          onError(i, error, trace);
         } else {
           rethrow;
         }
@@ -54,7 +54,7 @@ class ZipFuture {
   /// Returns a [Future] that completes with the mapped result of type [T].
   Future<T> executeThenMap<T>(
     T Function(List<dynamic>) mapper, {
-    void Function(int index, dynamic error)? onError,
+    void Function(int index, dynamic error, dynamic trace)? onError,
   }) async {
     final results = await execute(onError: onError);
 
