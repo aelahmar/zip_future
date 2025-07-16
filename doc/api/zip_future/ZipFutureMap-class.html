@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the ZipFuture class from the zip_future library, for the Dart programming language.">
-  <title>ZipFuture class - zip_future library - Dart API</title>
+  <meta name="description" content="API docs for the ZipFutureMap class from the zip_future library, for the Dart programming language.">
+  <title>ZipFutureMap class - zip_future library - Dart API</title>
 
 
   
@@ -26,9 +26,9 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">zip_future</a></li>
     <li><a href="../zip_future/">zip_future.dart</a></li>
-    <li class="self-crumb">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span> class</li>
+    <li class="self-crumb">ZipFutureMap<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span> class</li>
   </ol>
-  <div class="self-name">ZipFuture</div>
+  <div class="self-name">ZipFutureMap</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -46,16 +46,15 @@
     id="dartdoc-main-content"
     class="main-content"
     data-above-sidebar="zip_future&#47;zip_future-library-sidebar.html"
-    data-below-sidebar="zip_future&#47;ZipFuture-class-sidebar.html">
+    data-below-sidebar="zip_future&#47;ZipFutureMap-class-sidebar.html">
     <div>
-<h1><span class="kind-class">ZipFuture&lt;<wbr><span class="type-parameter">T</span>&gt;</span> class 
+<h1><span class="kind-class">ZipFutureMap&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span> class 
  
 </h1></div>
 
     
 <section class="desc markdown">
-  <p>Utility to zip a list of futures into a single Future&lt;List&lt;T?&gt;&gt;.
-If <a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a> is <code>skip</code>, failed futures yield null entries.</p>
+  <p>Utility to zip a map of futures into a single Future&lt;Map&lt;K, V&gt;&gt;.</p>
 </section>
 
 
@@ -64,11 +63,11 @@ If <a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a> is <code>s
   <section class="summary offset-anchor" id="constructors">
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
-        <dt id="ZipFuture.zip" class="callable">
-          <span class="name"><a href="../zip_future/ZipFuture/ZipFuture.zip.html">ZipFuture.zip</a></span><span class="signature">(<span class="parameter" id="zip-param-futures"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">futures</span>, {</span><span class="parameter" id="zip-param-errorPolicy"><span class="type-annotation"><a href="../zip_future/ErrorPolicy.html">ErrorPolicy</a></span> <span class="parameter-name">errorPolicy</span> = <span class="default-value">ErrorPolicy.failFast</span>, </span><span class="parameter" id="zip-param-maxConcurrent"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxConcurrent</span> = <span class="default-value">4</span>, </span><span class="parameter" id="zip-param-timeout"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span> <span class="parameter-name">timeout</span></span>})</span>
+        <dt id="ZipFutureMap.map" class="callable">
+          <span class="name"><a href="../zip_future/ZipFutureMap/ZipFutureMap.map.html">ZipFutureMap.map</a></span><span class="signature">(<span class="parameter" id="map-param-futures"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">V</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">futures</span>, {</span><span class="parameter" id="map-param-errorPolicy"><span class="type-annotation"><a href="../zip_future/ErrorPolicy.html">ErrorPolicy</a></span> <span class="parameter-name">errorPolicy</span> = <span class="default-value">ErrorPolicy.failFast</span>, </span><span class="parameter" id="map-param-maxConcurrent"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxConcurrent</span> = <span class="default-value">10</span>, </span><span class="parameter" id="map-param-timeout"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span> <span class="parameter-name">timeout</span></span>})</span>
         </dt>
         <dd>
-          Creates a ZipFuture with optional error policy, concurrency limit, and timeout.
+          Creates a ZipFutureMap with optional error policy, concurrency limit, and timeout.
             <div class="constructor-modifier features">factory</div>
         </dd>
     </dl>
@@ -80,7 +79,7 @@ If <a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a> is <code>s
     <h2>Properties</h2>
     <dl class="properties">
         <dt id="errorPolicy" class="property">
-  <span class="name"><a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a></span>
+  <span class="name"><a href="../zip_future/ZipFutureMap/errorPolicy.html">errorPolicy</a></span>
   <span class="signature">&#8594; <a href="../zip_future/ErrorPolicy.html">ErrorPolicy</a></span>
   
 
@@ -104,7 +103,7 @@ If <a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a> is <code>s
 </dd>
 
         <dt id="maxConcurrent" class="property">
-  <span class="name"><a href="../zip_future/ZipFuture/maxConcurrent.html">maxConcurrent</a></span>
+  <span class="name"><a href="../zip_future/ZipFutureMap/maxConcurrent.html">maxConcurrent</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span>
   
 
@@ -128,7 +127,7 @@ If <a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a> is <code>s
 </dd>
 
         <dt id="timeout" class="property">
-  <span class="name"><a href="../zip_future/ZipFuture/timeout.html">timeout</a></span>
+  <span class="name"><a href="../zip_future/ZipFutureMap/timeout.html">timeout</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span>
   
 
@@ -149,29 +148,15 @@ If <a href="../zip_future/ZipFuture/errorPolicy.html">errorPolicy</a> is <code>s
     <h2>Methods</h2>
     <dl class="callables">
         <dt id="execute" class="callable">
-  <span class="name"><a href="../zip_future/ZipFuture/execute.html">execute</a></span><span class="signature">(<wbr>{<span class="parameter" id="execute-param-onError"><span class="type-annotation">void</span> <span class="parameter-name">onError</span>(<span class="parameter" id="param-index"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">index</span>, </span><span class="parameter" id="param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">error</span>, </span><span class="parameter" id="param-trace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a></span> <span class="parameter-name">trace</span></span>)?</span>})
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T?</span>&gt;</span></span>&gt;</span></span>
+  <span class="name"><a href="../zip_future/ZipFutureMap/execute.html">execute</a></span><span class="signature">(<wbr>{<span class="parameter" id="execute-param-onError"><span class="type-annotation">void</span> <span class="parameter-name">onError</span>(<span class="parameter" id="param-key"><span class="type-annotation">K</span> <span class="parameter-name">key</span>, </span><span class="parameter" id="param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">error</span>, </span><span class="parameter" id="param-trace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a></span> <span class="parameter-name">trace</span></span>)?</span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd>
-  Executes all futures according to the configured policies,
-returning their results as a List&lt;T?&gt; (null for skipped failures).
-  
-
-</dd>
-
-        <dt id="executeThenMap" class="callable">
-  <span class="name"><a href="../zip_future/ZipFuture/executeThenMap.html">executeThenMap</a></span><span class="signature">&lt;<wbr><span class="type-parameter">R</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="executeThenMap-param-mapper"><span class="type-annotation">R</span> <span class="parameter-name">mapper</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T?</span>&gt;</span></span></span>), {</span><span class="parameter" id="executeThenMap-param-onError"><span class="type-annotation">void</span> <span class="parameter-name">onError</span>(<span class="parameter" id="param-index"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">index</span>, </span><span class="parameter" id="param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">error</span>, </span><span class="parameter" id="param-trace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a></span> <span class="parameter-name">trace</span></span>)?</span>})
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">R</span>&gt;</span></span>
-  </span>
-  
-
-</dt>
-<dd>
-  Executes all futures, applies <code>mapper</code> to the list of results (List&lt;T?&gt;),
-and returns the mapped value of type <code>R</code>.
+  Executes all map futures according to the configured policies,
+returning their results as a Map&lt;K, V&gt; (missing keys for skipped failures).
   
 
 </dd>
@@ -240,7 +225,7 @@ and returns the mapped value of type <code>R</code>.
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">zip_future</a></li>
     <li><a href="../zip_future/">zip_future</a></li>
-    <li class="self-crumb">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span> class</li>
+    <li class="self-crumb">ZipFutureMap<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span> class</li>
 </ol>
 
     <h5>zip_future library</h5>

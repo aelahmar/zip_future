@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the ZipFuture.zip constructor from Class ZipFuture from the zip_future library, for the Dart programming language.">
-  <title>ZipFuture.zip constructor - ZipFuture - zip_future library - Dart API</title>
+  <meta name="description" content="API docs for the ZipFutureMap.map constructor from Class ZipFutureMap from the zip_future library, for the Dart programming language.">
+  <title>ZipFutureMap.map constructor - ZipFutureMap - zip_future library - Dart API</title>
 
 
   
@@ -26,10 +26,10 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">zip_future</a></li>
     <li><a href="../../zip_future/">zip_future.dart</a></li>
-    <li><a href="../../zip_future/ZipFuture-class.html">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
-    <li class="self-crumb">ZipFuture.zip factory constructor</li>
+    <li><a href="../../zip_future/ZipFutureMap-class.html">ZipFutureMap<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></a></li>
+    <li class="self-crumb">ZipFutureMap.map factory constructor</li>
   </ol>
-  <div class="self-name">ZipFuture.zip</div>
+  <div class="self-name">ZipFutureMap.map</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -46,36 +46,36 @@
   <div
       id="dartdoc-main-content"
       class="main-content"
-      data-above-sidebar="zip_future&#47;ZipFuture-class-sidebar.html"
+      data-above-sidebar="zip_future&#47;ZipFutureMap-class-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-constructor">ZipFuture&lt;<wbr><span class="type-parameter">T</span>&gt;.zip</span> constructor 
+<h1><span class="kind-constructor">ZipFutureMap&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;.map</span> constructor 
 </h1></div>
 
     <section class="multi-line-signature">
       
-      <span class="name ">ZipFuture&lt;<wbr><span class="type-parameter">T</span>&gt;.zip</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="zip-param-futures"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">futures</span>, {</span></li>
-<li><span class="parameter" id="zip-param-errorPolicy"><span class="type-annotation"><a href="../../zip_future/ErrorPolicy.html">ErrorPolicy</a></span> <span class="parameter-name">errorPolicy</span> = <span class="default-value">ErrorPolicy.failFast</span>, </span></li>
-<li><span class="parameter" id="zip-param-maxConcurrent"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxConcurrent</span> = <span class="default-value">4</span>, </span></li>
-<li><span class="parameter" id="zip-param-timeout"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span> <span class="parameter-name">timeout</span>, </span></li>
+      <span class="name ">ZipFutureMap&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;.map</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="map-param-futures"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">V</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">futures</span>, {</span></li>
+<li><span class="parameter" id="map-param-errorPolicy"><span class="type-annotation"><a href="../../zip_future/ErrorPolicy.html">ErrorPolicy</a></span> <span class="parameter-name">errorPolicy</span> = <span class="default-value">ErrorPolicy.failFast</span>, </span></li>
+<li><span class="parameter" id="map-param-maxConcurrent"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxConcurrent</span> = <span class="default-value">10</span>, </span></li>
+<li><span class="parameter" id="map-param-timeout"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span> <span class="parameter-name">timeout</span>, </span></li>
 </ol>})
     </section>
     
 <section class="desc markdown">
-  <p>Creates a ZipFuture with optional error policy, concurrency limit, and timeout.</p>
+  <p>Creates a ZipFutureMap with optional error policy, concurrency limit, and timeout.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">factory ZipFuture.zip(
-  List&lt;Future&lt;T&gt;&gt; futures, {
+  <pre class="language-dart"><code class="language-dart">factory ZipFutureMap.map(
+  Map&lt;K, Future&lt;V&gt;&gt; futures, {
   ErrorPolicy errorPolicy = ErrorPolicy.failFast,
-  int maxConcurrent = 4,
+  int maxConcurrent = 10,
   Duration? timeout,
 }) =&gt;
-    ZipFuture._(
+    ZipFutureMap._(
       futures,
       errorPolicy: errorPolicy,
       maxConcurrent: maxConcurrent,
@@ -95,11 +95,11 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">zip_future</a></li>
     <li><a href="../../zip_future/">zip_future</a></li>
-    <li><a href="../../zip_future/ZipFuture-class.html">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
-    <li class="self-crumb">ZipFuture.zip factory constructor</li>
+    <li><a href="../../zip_future/ZipFutureMap-class.html">ZipFutureMap<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></a></li>
+    <li class="self-crumb">ZipFutureMap.map factory constructor</li>
 </ol>
 
-    <h5>ZipFuture class</h5>
+    <h5>ZipFutureMap class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-left-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">

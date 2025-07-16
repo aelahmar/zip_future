@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the execute method from the ZipFuture class, for the Dart programming language.">
-  <title>execute method - ZipFuture class - zip_future library - Dart API</title>
+  <meta name="description" content="API docs for the execute method from the ZipFutureMap class, for the Dart programming language.">
+  <title>execute method - ZipFutureMap class - zip_future library - Dart API</title>
 
 
   
@@ -26,7 +26,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">zip_future</a></li>
     <li><a href="../../zip_future/">zip_future.dart</a></li>
-    <li><a href="../../zip_future/ZipFuture-class.html">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../zip_future/ZipFutureMap-class.html">ZipFutureMap<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></a></li>
     <li class="self-crumb">execute method</li>
   </ol>
   <div class="self-name">execute</div>
@@ -46,7 +46,7 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="zip_future&#47;ZipFuture-class-sidebar.html"
+    data-above-sidebar="zip_future&#47;ZipFutureMap-class-sidebar.html"
     data-below-sidebar="">
     <div>
 <h1><span class="kind-method">execute</span> method 
@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T?</span>&gt;</span></span>&gt;</span></span>
-<span class="name ">execute</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="execute-param-onError"><span class="type-annotation">void</span> <span class="parameter-name">onError</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-index"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">index</span>, </span></li>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>&gt;</span></span>
+<span class="name ">execute</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="execute-param-onError"><span class="type-annotation">void</span> <span class="parameter-name">onError</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-key"><span class="type-annotation">K</span> <span class="parameter-name">key</span>, </span></li>
 <li><span class="parameter" id="param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">error</span>, </span></li>
 <li><span class="parameter" id="param-trace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a></span> <span class="parameter-name">trace</span></span></li>
 </ol>)?, </span></li>
@@ -66,43 +66,42 @@
     </section>
     
 <section class="desc markdown">
-  <p>Executes all futures according to the configured policies,
-returning their results as a List&lt;T?&gt; (null for skipped failures).</p>
+  <p>Executes all map futures according to the configured policies,
+returning their results as a Map&lt;K, V&gt; (missing keys for skipped failures).</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;T?&gt;&gt; execute({
-  void Function(int index, Object error, StackTrace trace)? onError,
+  <pre class="language-dart"><code class="language-dart">Future&lt;Map&lt;K, V&gt;&gt; execute({
+  void Function(K key, Object error, StackTrace trace)? onError,
 }) async {
-  final results = List&lt;T?&gt;.filled(_futures.length, null);
-  final errors = &lt;int, Object&gt;{};
-  final traces = &lt;int, StackTrace&gt;{};
+  final keys = _futures.keys.toList();
+  final results = &lt;K, V&gt;{};
+  final errors = &lt;K, Object&gt;{};
+  final traces = &lt;K, StackTrace&gt;{};
 
-  for (var i = 0; i &lt; _futures.length; i += maxConcurrent) {
-    final end = min(i + maxConcurrent, _futures.length);
-    final chunk = _futures.sublist(i, end);
+  for (var i = 0; i &lt; keys.length; i += maxConcurrent) {
+    final end = min(i + maxConcurrent, keys.length);
+    final chunkKeys = keys.sublist(i, end);
     final tasks = &lt;Future&lt;void&gt;&gt;[];
 
-    for (var j = 0; j &lt; chunk.length; j++) {
-      var future = chunk[j];
+    for (var key in chunkKeys) {
+      var future = _futures[key]!;
       if (timeout != null) future = future.timeout(timeout!);
-      final idx = i + j;
       tasks.add(future.then((value) {
-        results[idx] = value;
+        results[key] = value;
       }).catchError((e, st) {
-        onError?.call(idx, e, st);
+        onError?.call(key, e, st);
         switch (errorPolicy) {
           case ErrorPolicy.failFast:
             throw e;
           case ErrorPolicy.collect:
-            errors[idx] = e;
-            traces[idx] = st;
+            errors[key] = e;
+            traces[key] = st;
             break;
           case ErrorPolicy.skip:
-            results[idx] = null;
             break;
         }
       }));
@@ -119,7 +118,7 @@ returning their results as a List&lt;T?&gt; (null for skipped failures).</p>
   }
 
   if (errorPolicy == ErrorPolicy.collect &amp;&amp; errors.isNotEmpty) {
-    throw ZipFutureException(errors, traces);
+    throw ZipFutureMapException&lt;K&gt;(errors, traces);
   }
 
   return results;
@@ -138,11 +137,11 @@ returning their results as a List&lt;T?&gt; (null for skipped failures).</p>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">zip_future</a></li>
     <li><a href="../../zip_future/">zip_future</a></li>
-    <li><a href="../../zip_future/ZipFuture-class.html">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../zip_future/ZipFutureMap-class.html">ZipFutureMap<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></a></li>
     <li class="self-crumb">execute method</li>
 </ol>
 
-    <h5>ZipFuture class</h5>
+    <h5>ZipFutureMap class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">

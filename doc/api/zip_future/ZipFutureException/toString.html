@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the executeThenMap method from the ZipFuture class, for the Dart programming language.">
-  <title>executeThenMap method - ZipFuture class - zip_future library - Dart API</title>
+  <meta name="description" content="API docs for the toString method from the ZipFutureException class, for the Dart programming language.">
+  <title>toString method - ZipFutureException class - zip_future library - Dart API</title>
 
 
   
@@ -26,10 +26,10 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">zip_future</a></li>
     <li><a href="../../zip_future/">zip_future.dart</a></li>
-    <li><a href="../../zip_future/ZipFuture-class.html">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
-    <li class="self-crumb">executeThenMap&lt;<wbr><span class="type-parameter">R</span>&gt; method</li>
+    <li><a href="../../zip_future/ZipFutureException-class.html">ZipFutureException</a></li>
+    <li class="self-crumb">toString method</li>
   </ol>
-  <div class="self-name">executeThenMap</div>
+  <div class="self-name">toString</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -46,43 +46,45 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="zip_future&#47;ZipFuture-class-sidebar.html"
+    data-above-sidebar="zip_future&#47;ZipFutureException-class-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-method">executeThenMap&lt;<wbr><span class="type-parameter">R</span>&gt;</span> method 
+<h1><span class="kind-method">toString</span> method 
 </h1></div>
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">R</span>&gt;</span></span>
-<span class="name ">executeThenMap</span>&lt;<wbr><span class="type-parameter">R</span>&gt;(<wbr><ol class="parameter-list"> <li><span class="parameter" id="executeThenMap-param-mapper"><span class="type-annotation">R</span> <span class="parameter-name">mapper</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T?</span>&gt;</span></span></span></li>
-</ol>), {</span></li>
-<li><span class="parameter" id="executeThenMap-param-onError"><span class="type-annotation">void</span> <span class="parameter-name">onError</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-index"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">index</span>, </span></li>
-<li><span class="parameter" id="param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">error</span>, </span></li>
-<li><span class="parameter" id="param-trace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a></span> <span class="parameter-name">trace</span></span></li>
-</ol>)?, </span></li>
-</ol>})
+  <div>
+    <ol class="annotation-list">
+        <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+    </ol>
+  </div>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+<span class="name ">toString</span>(<wbr>)
 
-      
+      <div class="features"><span class="feature">override</span></div>
 
     </section>
     
 <section class="desc markdown">
-  <p>Executes all futures, applies <code>mapper</code> to the list of results (List&lt;T?&gt;),
-and returns the mapped value of type <code>R</code>.</p>
+  <p>A string representation of this object.</p>
+<p>Some classes have a default textual representation,
+often paired with a static <code>parse</code> function (like <a href="https://api.flutter.dev/flutter/dart-core/int/parse.html">int.parse</a>).
+These classes will provide the textual representation as
+their string representation.</p>
+<p>Other classes have no meaningful textual representation
+that a program will care about.
+Such classes will typically override <code>toString</code> to provide
+useful information when inspecting the object,
+mainly for debugging or logging.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;R&gt; executeThenMap&lt;R&gt;(
-  R Function(List&lt;T?&gt;) mapper, {
-  void Function(int index, Object error, StackTrace trace)? onError,
-}) async {
-  final results = await execute(onError: onError);
-  return mapper(results);
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">@override
+String toString() =&gt; &#39;ZipFutureException(errors: $errors)&#39;;</code></pre>
 </section>
 
 
@@ -97,11 +99,11 @@ and returns the mapped value of type <code>R</code>.</p>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">zip_future</a></li>
     <li><a href="../../zip_future/">zip_future</a></li>
-    <li><a href="../../zip_future/ZipFuture-class.html">ZipFuture<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
-    <li class="self-crumb">executeThenMap&lt;<wbr><span class="type-parameter">R</span>&gt; method</li>
+    <li><a href="../../zip_future/ZipFutureException-class.html">ZipFutureException</a></li>
+    <li class="self-crumb">toString method</li>
 </ol>
 
-    <h5>ZipFuture class</h5>
+    <h5>ZipFutureException class</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
