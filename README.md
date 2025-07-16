@@ -1,4 +1,4 @@
-# ZipFutures
+# ZipFuture
 
 A Dart package for efficiently managing and executing multiple asynchronous operations (Futures) with advanced control over error handling, concurrency, and timeouts.
 
@@ -20,7 +20,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  zip_futures: ^1.2.0
+  zip_future: ^1.2.0
 ```
 
 Run:

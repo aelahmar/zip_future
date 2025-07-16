@@ -26,7 +26,7 @@ class ZipFuture<T> {
   ZipFuture._(
     this._futures, {
     this.errorPolicy = ErrorPolicy.failFast,
-    this.maxConcurrent = 1,
+    this.maxConcurrent = 4,
     this.timeout,
   });
 
@@ -34,7 +34,7 @@ class ZipFuture<T> {
   factory ZipFuture.zip(
     List<Future<T>> futures, {
     ErrorPolicy errorPolicy = ErrorPolicy.failFast,
-    int maxConcurrent = 1,
+    int maxConcurrent = 4,
     Duration? timeout,
   }) =>
       ZipFuture._(
@@ -59,10 +59,10 @@ class ZipFuture<T> {
       final tasks = <Future<void>>[];
 
       for (var j = 0; j < chunk.length; j++) {
-        var f = chunk[j];
-        if (timeout != null) f = f.timeout(timeout!);
+        var future = chunk[j];
+        if (timeout != null) future = future.timeout(timeout!);
         final idx = i + j;
-        tasks.add(f.then((value) {
+        tasks.add(future.then((value) {
           results[idx] = value;
         }).catchError((e, st) {
           onError?.call(idx, e, st);
@@ -129,7 +129,7 @@ class ZipFutureMap<K, V> {
   ZipFutureMap._(
     this._futures, {
     this.errorPolicy = ErrorPolicy.failFast,
-    this.maxConcurrent = 1,
+    this.maxConcurrent = 10,
     this.timeout,
   });
 
@@ -137,7 +137,7 @@ class ZipFutureMap<K, V> {
   factory ZipFutureMap.map(
     Map<K, Future<V>> futures, {
     ErrorPolicy errorPolicy = ErrorPolicy.failFast,
-    int maxConcurrent = 1,
+    int maxConcurrent = 10,
     Duration? timeout,
   }) =>
       ZipFutureMap._(
@@ -163,9 +163,9 @@ class ZipFutureMap<K, V> {
       final tasks = <Future<void>>[];
 
       for (var key in chunkKeys) {
-        var f = _futures[key]!;
-        if (timeout != null) f = f.timeout(timeout!);
-        tasks.add(f.then((value) {
+        var future = _futures[key]!;
+        if (timeout != null) future = future.timeout(timeout!);
+        tasks.add(future.then((value) {
           results[key] = value;
         }).catchError((e, st) {
           onError?.call(key, e, st);
