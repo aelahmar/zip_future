@@ -1,125 +1,142 @@
-# ZipFuture
+# ZipFutures
 
-A Dart package for efficiently managing and executing multiple asynchronous operations using futures.
-`ZipFuture` simplifies the process of handling multiple futures by providing a convenient way to execute them simultaneously and retrieve their results.
-
-This package is ideal for use cases where you need to wait for multiple asynchronous operations, such as API calls, database transactions, or file operations, before proceeding.
+A Dart package for efficiently managing and executing multiple asynchronous operations (Futures) with advanced control over error handling, concurrency, and timeouts.
 
 ## Features
 
-- **Parallel Execution**: Execute multiple futures in parallel, improving performance over sequential execution.
-- **Result Mapping**: Easily transform the results of multiple futures into a single custom data structure.
-- **Error Handling**: Handle errors in individual futures without affecting the execution of others.
-- **Easy Integration**: Designed to be straightforward to integrate into any Dart or Flutter project.
+- **List Zipping**: Combine a list of `Future<T>` into a single `Future<List<T?>>`.
+- **Map Zipping**: Combine a map of named futures into a `Future<Map<K, V>>` with `ZipFutureMap.map`.
+- **Error Policies**:
+    - **failFast** (default): stop and rethrow on the first error.
+    - **skip**: skip failed futures and insert `null` (for lists) or drop keys (for maps).
+    - **collect**: wait for all futures, then throw a `ZipFutureException` or `ZipFutureMapException` containing all errors.
+- **Concurrency Limits**: Control how many futures run simultaneously via `maxConcurrent`.
+- **Timeouts**: Specify a per-future `timeout` to fail slow operations.
+- **Result Mapping**: Use `executeThenMap` to post-process the list of results into any desired shape.
 
 ## Getting Started
 
-### Installation
-
-To use the ZipFuture package in your Dart or Flutter project, add the following dependency to your `pubspec.yaml` file:
+Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  zip_future: ^1.1.0
+  zip_futures: ^1.2.0
 ```
 
-Run `pub get` or `flutter pub get` to install the package.
+Run:
 
-### Usage
+```bash
+flutter pub get
+```
 
-Import the package where you want to use it:
+Import:
 
 ```dart
 import 'package:zip_future/zip_future.dart';
 ```
 
-#### Basic Example
+## Usage
 
-Here's a simple example of how to use `ZipFuture` to execute multiple futures in parallel and handle their results:
+### 1. Basic List Zipping
 
 ```dart
-import 'package:zip_future/zip_future.dart';
-
-void main() async {
-  Future<String> future1 = Future.delayed(Duration(seconds: 1), () => "Result 1");
-  Future<int> future2 = Future.delayed(Duration(seconds: 2), () => 42);
-
-  var zip = ZipFuture.zip([future1, future2]);
-  List<dynamic> results = await zip.execute();
-
-  print(results); // Prints: ['Result 1', 42]
-}
+final results = await ZipFuture.zip([
+  Future.value(1),
+  Future.value(2),
+  Future.value(3),
+]).execute();
+// results == [1, 2, 3]
 ```
 
-#### Advanced Usage
-
-Using `executeThenMap` to process results after all futures have completed:
+### 2. List Zipping with Error Policy, Concurrency, and Timeout
 
 ```dart
-import 'package:zip_future/zip_future.dart';
-
-void main() async {
-  var futures = [
-    Future.delayed(Duration(seconds: 1), () => "Hello"),
-    Future.delayed(Duration(seconds: 2), () => "World"),
-  ];
-
-  var zip = ZipFuture.zip(futures);
-  String concatenated = await zip.executeThenMap((results) => results.join(" "));
-
-  print(concatenated); // Prints: 'Hello World'
-}
+final results = await ZipFuture.zip(
+  [fetchA(), fetchB(), fetchC()],
+  errorPolicy: ErrorPolicy.skip,
+  maxConcurrent: 2,
+  timeout: Duration(seconds: 1),
+).execute(
+  onError: (index, error, stack) => print('Error at \$index: \$error'),
+);
+// failures yield null entries: [A, null, C]
 ```
 
-#### Error Handling
-
-Handling errors in individual futures using the `onError` callback:
+### 3. Collect Errors After All Complete
 
 ```dart
-import 'package:zip_future/zip_future.dart';
-
-void main() async {
-  Future<String> future1 = Future.delayed(Duration(seconds: 1), () => "Result 1");
-  Future<int> future2 = Future.delayed(Duration(seconds: 2), () => throw Exception("Error in future2"));
-  Future<double> future3 = Future.delayed(Duration(seconds: 3), () => 3.14);
-
-  var zip = ZipFuture.zip([future1, future2, future3]);
-
-  List<dynamic> results = await zip.execute(onError: (index, error) {
-    print('Error at index $index: $error');
-  });
-
-  print(results); // Prints: ['Result 1', 3.14]
-}
-```
-
-Using `executeThenMap` with error handling:
-
-```dart
-import 'package:zip_future/zip_future.dart';
-
-void main() async {
-  var futures = [
-    Future.delayed(Duration(seconds: 1), () => 1),
-    Future.delayed(Duration(seconds: 2), () => throw Exception("Error in future2")),
-    Future.delayed(Duration(seconds: 3), () => 3),
-  ];
-
-  var zip = ZipFuture.zip(futures);
-
-  int sum = await zip.executeThenMap<int>(
-        (results) => results.fold(0, (previousValue, element) => previousValue + element),
-    onError: (index, error) {
-      print('Error at index $index: $error');
-    },
+try {
+  await ZipFuture.zip(
+    [fetchX(), fetchY(), fetchZ()],
+    errorPolicy: ErrorPolicy.collect,
+  ).execute(
+    onError: (i, e, st) => print('Error at \$i: \$e'),
   );
-
-  print(sum); // Prints: 4
+} catch (e) {
+  // e is ZipFutureException containing all errors
+  print(e);
 }
 ```
+
+### 4. Mapping Results
+
+```dart
+final sum = await ZipFuture.zip([
+  Future.value(1),
+  Future.value(2),
+  Future.value(3),
+]).executeThenMap((list) => list.whereType<int>().reduce((a, b) => a + b));
+// sum == 6
+```
+
+### 5. Map-Based Zipping
+
+```dart
+final userData = await ZipFutureMap<String, dynamic>.map(
+  {
+    'user': fetchUser(),
+    'posts': fetchPosts(),
+  },
+  errorPolicy: ErrorPolicy.failFast,
+  maxConcurrent: 2,
+).execute(
+  onError: (key, error, st) => print('Error at \$key: \$error'),
+);
+// userData == {'user': User(...), 'posts': [...]} 
+```
+
+### 6. Map Zipping with Skip or Collect Policies
+
+```dart
+// Skip failures: missing keys dropped
+final partial = await ZipFutureMap<String, int>.map(
+  {'a': fA(), 'b': fB(), 'c': fC()},
+  errorPolicy: ErrorPolicy.skip,
+).execute();
+
+// Collect errors: throws ZipFutureMapException with all errors
+try {
+  await ZipFutureMap.map<String, int>(
+    {'x': fX(), 'y': fY()},
+    errorPolicy: ErrorPolicy.collect,
+  ).execute();
+} catch (e) {
+  print(e);
+}
+```
+
+## API Reference
+
+- **`ZipFuture.zip(List<Future<T>> futures, {ErrorPolicy errorPolicy, int maxConcurrent, Duration? timeout})`**
+- **`Future<List<T?>> execute({void onError(int index, Object error, StackTrace trace)})`**
+- **`Future<R> executeThenMap<R>(R Function(List<T?>) mapper, {void onError(int index, Object error, StackTrace trace)})`**
+- **`ZipFutureMap<K, V>.map(Map<K, Future<V>> futures, {ErrorPolicy errorPolicy, int maxConcurrent, Duration? timeout})`**
+- **`Future<Map<K, V>> execute({void onError(K key, Object error, StackTrace trace)})`**
 
 ## Contributing
 
-Contributions to improve `ZipFuture` are welcome. Feel free to fork the repository and submit pull requests.
+Contributions and feedback are welcome! Please open issues or pull requests on GitHub.
 
-Thank you for using or considering `ZipFuture`. We hope it helps you manage your asynchronous Dart operations effectively!
+---
+
+Thank you for using **ZipFutures**! We hope it streamlines your asynchronous workflows.
