@@ -1,82 +1,120 @@
+import 'dart:async';
+
 import 'package:test/test.dart';
 import 'package:zip_future/zip_future.dart';
 
+Future<T> delayed<T>(T value, [int ms = 10]) =>
+    Future.delayed(Duration(milliseconds: ms), () => value);
+
+Future<T> delayedError<T>(Object error, [int ms = 10]) =>
+    Future.delayed(Duration(milliseconds: ms), () => throw error);
+
 void main() {
-  test('ZipFuture', () async {
-    final future1 = Future.value(1);
-    final future2 = Future.value(2);
-    final future3 = Future.value(3);
-
-    final zipFuture = ZipFuture.zip([future1, future2, future3]);
-
-    final results = await zipFuture.execute();
-    expect(results, [1, 2, 3]);
-
-    final result = await zipFuture.executeThenMap<num>((results) {
-      return results.fold(
-          0, (previousValue, element) => previousValue + element);
-    });
-    expect(result, 6);
-  });
-
-  test('ZipFuture with different types', () async {
-    final future1 = Future.value(1);
-    final future2 = Future.value('2');
-    final future3 = Future.value(3.0);
-
-    final zipFuture = ZipFuture.zip([future1, future2, future3]);
-
-    final results = await zipFuture.execute();
-    expect(results, [1, '2', 3.0]);
-
-    final result = await zipFuture.executeThenMap<num>((results) {
-      return results.fold(
-          0, (previousValue, element) => previousValue + element);
-    });
-    expect(result, 6);
-  });
-
-  test('ZipFuture with error handling', () async {
-    final future1 = Future.value(1);
-    final future2 = Future.error('error');
-    final future3 = Future.value(3);
-
-    final zipFuture = ZipFuture.zip([future1, future2, future3]);
-
-    final errors = <dynamic>[];
-
-    final results = await zipFuture.execute(onError: (index, error) {
-      errors.add({'index': index, 'error': error});
+  group('ZipFuture List tests', () {
+    test('Basic success', () async {
+      final results =
+          await ZipFuture.zip([delayed(1), delayed(2), delayed(3)]).execute();
+      expect(results, equals([1, 2, 3]));
     });
 
-    expect(results, [1, 3]); // Only the successful results
-    expect(errors.length, 1);
-    expect(errors[0]['index'], 1);
-    expect(errors[0]['error'], 'error');
+    test('Fail-fast throws on first error', () async {
+      expect(
+        () => ZipFuture.zip([
+          delayed(1),
+          delayedError(Exception('fail')), // error at index 1
+          delayed(3)
+        ]).execute(),
+        throwsA(isA<Exception>().having(
+          (e) => e.toString(),
+          'message',
+          contains('fail'),
+        )),
+      );
+    });
+
+    test('Skip errors yields null entries without throwing', () async {
+      final results = await ZipFuture.zip(
+              [delayed(1), delayedError('bad'), delayed(3)],
+              errorPolicy: ErrorPolicy.skip)
+          .execute(
+        onError: (i, e, st) => print('skipped $i: $e'),
+      );
+      expect(results, equals([1, null, 3]));
+    });
+
+    test('Collect errors throws ZipFutureException with details', () async {
+      try {
+        await ZipFuture.zip(
+                [delayed(1), delayedError('e1'), delayedError('e2')],
+                errorPolicy: ErrorPolicy.collect)
+            .execute(
+          onError: (i, e, st) => print('collected $i: $e'),
+        );
+        fail('Expected ZipFutureException');
+      } catch (e) {
+        expect(e, isA<ZipFutureException>());
+        final ex = e as ZipFutureException;
+        expect(ex.errors.length, equals(2));
+        expect(ex.errors.keys, containsAll([1, 2]));
+      }
+    });
+
+    test('Timeout interacts with skip policy', () async {
+      final results = await ZipFuture.zip(
+        [delayed(1, 5), delayed(2, 50)],
+        errorPolicy: ErrorPolicy.skip,
+        timeout: Duration(milliseconds: 10),
+      ).execute(
+        onError: (i, e, st) => expect(e, isA<TimeoutException>()),
+      );
+      expect(results, equals([1, null]));
+    });
+
+    test('executeThenMap transforms results', () async {
+      final sum = await ZipFuture.zip([delayed(4), delayed(5)]).executeThenMap(
+          (list) => list.whereType<int>().reduce((a, b) => a + b));
+      expect(sum, equals(9));
+    });
   });
 
-  test('ZipFuture with error handling and executeThenMap', () async {
-    final future1 = Future.value(1);
-    final future2 = Future.error('error');
-    final future3 = Future.value(3);
+  group('ZipFutureMap tests', () {
+    test('Basic map success', () async {
+      final mapRes = await ZipFutureMap<String, int>.map(
+          {'a': delayed(10), 'b': delayed(20)}).execute();
+      expect(mapRes, equals({'a': 10, 'b': 20}));
+    });
 
-    final zipFuture = ZipFuture.zip([future1, future2, future3]);
+    test('Map skip policy removes keys for failures', () async {
+      final mapRes = await ZipFutureMap<String, int>.map(
+              {'x': delayed(1), 'y': delayedError('err')},
+              errorPolicy: ErrorPolicy.skip)
+          .execute(
+        onError: (k, e, st) => print('skipped $k: $e'),
+      );
+      expect(mapRes.containsKey('x'), isTrue);
+      expect(mapRes.containsKey('y'), isFalse);
+    });
 
-    final errors = <dynamic>[];
+    test('Map collect policy throws with multiple errors', () async {
+      expect(
+        () => ZipFutureMap<String, int>.map(
+                {'p': delayedError('pErr'), 'q': delayedError('qErr')},
+                errorPolicy: ErrorPolicy.collect)
+            .execute(
+          onError: (k, e, st) => print('collected $k: $e'),
+        ),
+        throwsA(isA<ZipFutureMapException>()),
+      );
+    });
 
-    final result = await zipFuture.executeThenMap<num>(
-      (results) {
-        return results.fold(
-            0, (previousValue, element) => previousValue + element);
-      },
-      onError: (index, error) {
-        errors.add({'index': index, 'error': error});
-      },
-    );
-
-    expect(result, 4); // Only the successful results
-    expect(errors.length, 1);
-    expect(errors[0]['index'], 1);
-    expect(errors[0]['error'], 'error');
+    test('Map timeout with failFast policy throws TimeoutException', () async {
+      expect(
+        () => ZipFutureMap<String, int>.map(
+                {'one': delayed(1, 5), 'two': delayed(2, 50)},
+                timeout: Duration(milliseconds: 10))
+            .execute(),
+        throwsA(isA<TimeoutException>()),
+      );
+    });
   });
 }
